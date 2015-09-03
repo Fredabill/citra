@@ -127,12 +127,12 @@ public:
     }
 
     // Only implemented for T=float
-    float Length() const;
+    T Length() const;
     void SetLength(const float l);
     Vec2 WithLength(const float l) const;
-    float Distance2To(Vec2 &other);
+    T Distance2To(Vec2 &other);
     Vec2 Normalized() const;
-    float Normalize(); // returns the previous length, which is often useful
+    T Normalize(); // returns the previous length, which is often useful
 
     T& operator [] (int i) //allow vector[1] = 3   (vector.y=3)
     {
@@ -258,12 +258,12 @@ public:
     }
 
     // Only implemented for T=float
-    float Length() const;
+    T Length() const;
     void SetLength(const float l);
     Vec3 WithLength(const float l) const;
-    float Distance2To(Vec3 &other);
+    T Distance2To(Vec3 &other);
     Vec3 Normalized() const;
-    float Normalize(); // returns the previous length, which is often useful
+    T Normalize(); // returns the previous length, which is often useful
 
     T& operator [] (int i) //allow vector[2] = 3   (vector.z=3)
     {
@@ -429,12 +429,12 @@ public:
     }
 
     // Only implemented for T=float
-    float Length() const;
+    T Length() const;
     void SetLength(const float l);
     Vec4 WithLength(const float l) const;
-    float Distance2To(Vec4 &other);
+    T Distance2To(Vec4 &other);
     Vec4 Normalized() const;
-    float Normalize(); // returns the previous length, which is often useful
+    T Normalize(); // returns the previous length, which is often useful
 
     T& operator [] (int i) //allow vector[2] = 3   (vector.z=3)
     {
