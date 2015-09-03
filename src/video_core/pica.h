@@ -1136,6 +1136,7 @@ private:
     // TODO: Perform proper arithmetic on this!
     float value;
 };
+
 static_assert(sizeof(float24) == sizeof(float), "Shader JIT assumes float24 is implemented as a 32-bit float");
 
 /// Struct used to describe current Pica state
@@ -1179,4 +1180,22 @@ void Shutdown();
 
 extern State g_state; ///< Current Pica state
 
-} // namespace
+} // namespace Pica
+
+namespace Math {
+
+using Pica::float24;
+
+template<>
+inline float24 Vec4<float24>::Length() const {
+    return float24::FromFloat32(
+        std::sqrt(x.ToFloat32() * x.ToFloat32() + y.ToFloat32() * y.ToFloat32() +
+                  z.ToFloat32() * z.ToFloat32() + w.ToFloat32() * w.ToFloat32()));
+}
+
+template<>
+inline Vec4<float24> Vec4<float24>::Normalized() const {
+    return *this / Length();
+}
+
+} // namespace Math
