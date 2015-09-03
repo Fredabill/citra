@@ -529,6 +529,16 @@ Vec4<decltype(V{}*T{})> operator * (const V& f, const Vec4<T>& vec)
     return MakeVec(f*vec.x,f*vec.y,f*vec.z,f*vec.w);
 }
 
+template<>
+inline float Vec4<float>::Length() const {
+    return std::sqrt(x * x + y * y + z * z + w * w);
+}
+
+template<>
+inline Vec4<float> Vec4<float>::Normalized() const {
+    return *this / Length();
+}
+
 typedef Vec4<float> Vec4f;
 
 
