@@ -32,6 +32,7 @@ set(HEADERS
             gpu_debugger.h
             hwrasterizer_base.h
             pica.h
+            pica_types.h
             primitive_assembly.h
             rasterizer.h
             renderer_base.h
