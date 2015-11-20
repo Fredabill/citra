@@ -657,6 +657,15 @@ struct Regs {
         DistanceAttenuation = 16,
     };
 
+    enum class LightingScale {
+        Scale1 = 0,
+        Scale2 = 1,
+        Scale4 = 2,
+        Scale8 = 3,
+        Scale1_4 = 6,
+        Scale1_2 = 7,
+    };
+
     enum class LightingLutInput {
         NH = 0, // Cosine of the angle between the normal and half-angle vectors
         VH = 1, // Cosine of the angle between the view and half-angle vectors
@@ -774,7 +783,35 @@ struct Regs {
             BitField<24, 3, u32> rr;
         } lut_input;
 
-        INSERT_PADDING_WORDS(0x7);
+        union {
+            BitField< 0, 3, LightingScale> d0;
+            BitField< 4, 3, LightingScale> d1;
+            BitField< 8, 3, LightingScale> sp;
+            BitField<12, 3, LightingScale> fr;
+            BitField<16, 3, LightingScale> rb;
+            BitField<20, 3, LightingScale> rg;
+            BitField<24, 3, LightingScale> rr;
+
+            static float GetScale(LightingScale scale) {
+                switch (scale) {
+                case LightingScale::Scale1:
+                    return 1.0f;
+                case LightingScale::Scale2:
+                    return 2.0f;
+                case LightingScale::Scale4:
+                    return 4.0f;
+                case LightingScale::Scale8:
+                    return 8.0f;
+                case LightingScale::Scale1_4:
+                    return 0.25f;
+                case LightingScale::Scale1_2:
+                    return 0.5f;
+                }
+                return 0.0f;
+            }
+        } lut_scale;
+
+        INSERT_PADDING_WORDS(0x6);
 
         union {
             // There are 8 light enable "slots", corresponding to the total number of lights
