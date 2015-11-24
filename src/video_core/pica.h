@@ -668,6 +668,14 @@ struct Regs {
         Config7 = 8,
     };
 
+    /// Selects which lighting components are affected by fresnel
+    enum class LightingFresnelSelector {
+        None = 0,       ///< Fresnel is disabled
+        PrimaryAlpha,   ///< Primary (diffuse) lighting alpha is affected by fresnel
+        SecondaryAlpha, ///< Secondary (specular) lighting alpha is affected by fresnel
+        BothAlpha,      ///< Both primary and secondary lighting alphas are affected by fresnel
+    };
+
     enum class LightingScale {
         Scale1 = 0,
         Scale2 = 1,
@@ -694,12 +702,15 @@ struct Regs {
         }
     };
 
+    /// Returns true if the specified lighting sampler is supported by the current Pica lighting configuration
     static bool IsLightingSamplerSupported(LightingConfig config, LightingSampler sampler) {
         switch (sampler) {
         case LightingSampler::Distribution0:
             return (config != LightingConfig::Config1);
         case LightingSampler::Distribution1:
             return (config != LightingConfig::Config0) && (config != LightingConfig::Config1) && (config != LightingConfig::Config5);
+        case LightingSampler::Fresnel:
+            return (config != LightingConfig::Config0) && (config != LightingConfig::Config2) && (config != LightingConfig::Config4);
         }
         return false;
     }
@@ -742,6 +753,7 @@ struct Regs {
         BitField<0, 3, u32> src_num; // number of enabled lights - 1
 
         union {
+            BitField< 2, 2, LightingFresnelSelector> fresnel_selector;
             BitField< 4, 4, LightingConfig> config;
             BitField<27, 1, u32> clamp_highlights; // 1: GL_TRUE, 0: GL_FALSE
         };
@@ -749,6 +761,7 @@ struct Regs {
         union {
             BitField<16, 1, u32> lut_enable_d0; // 0: GL_TRUE, 1: GL_FALSE
             BitField<17, 1, u32> lut_enable_d1; // 0: GL_TRUE, 1: GL_FALSE
+            BitField<19, 1, u32> lut_enable_fr; // 0: GL_TRUE, 1: GL_FALSE
 
             // Each bit specifies whether distance attenuation should be applied for the
             // corresponding light
